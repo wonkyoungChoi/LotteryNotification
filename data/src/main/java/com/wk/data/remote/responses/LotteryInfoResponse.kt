@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LotteryInfoResponse(
-    var full_data: String? = ""
+    var data: String = ""
 )

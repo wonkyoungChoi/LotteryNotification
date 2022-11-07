@@ -7,5 +7,5 @@ interface ApiHandler {
 
     suspend fun <T> handleCall(call: suspend () -> Response<T>): Result<T>
 
-//    suspend fun <T> handleSocket(call: suspend () -> T): Result<T>
+    suspend fun <T> handleSocket(call: suspend () -> T): Result<T>
 }

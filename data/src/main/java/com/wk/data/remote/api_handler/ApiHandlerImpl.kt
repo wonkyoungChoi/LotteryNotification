@@ -20,8 +20,14 @@ class ApiHandlerImpl @Inject constructor() : ApiHandler {
         }
     }
 
-//    override suspend fun <T> handleSocket(call: suspend () -> T): Result<T> {
-//    }
+    override suspend fun <T> handleSocket(call: suspend () -> T): Result<T>  =
+        try {
+            val response = call()
+            Result.Success(response)
+        } catch (e: Exception) {
+            error(e.message ?: e.toString())
+        }
+
 
     private fun <T> error(errorMessage: String): Result<T> =
         Result.Error("Api call failed $errorMessage")

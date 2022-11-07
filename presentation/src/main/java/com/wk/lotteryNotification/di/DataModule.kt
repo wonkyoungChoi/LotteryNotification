@@ -5,6 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.wk.data.local.AppDataStore
 import com.wk.data.local.AppDataStoreImpl
 import com.wk.data.remote.api_handler.ApiHandler
@@ -49,13 +51,16 @@ object DataModule {
         .build()
 
     @Singleton
+    var gson: Gson = GsonBuilder().setLenient().create()
+
+    @Singleton
     @Provides
     fun provideRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
         .baseUrl("https://dhlottery.co.kr/")
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
     @Singleton
