@@ -11,17 +11,15 @@ import javax.inject.Inject
 
 class LotteryInfoRepositoryImpl @Inject constructor(
     private val lotteryInfoApi: LotteryInfoApi,
-    private val appDataStore: AppDataStore,
     private val apiHandler: ApiHandler
 ) : LotteryInfoRepository {
-    override suspend fun getLotteryInfo(): Result<LotteryInfoModel> {
+    override suspend fun getMainLotteryInfo(): Result<LotteryInfoModel> {
         val response =
-            apiHandler.handleCall { lotteryInfoApi.getLotteryInfo() }
+            apiHandler.handleCall { lotteryInfoApi.getLotteryInfo("main") }
 
 
         return response.data?.let { infoResponse ->
-            appDataStore.setLotteryInfo(infoResponse.toModel())
             Result.Success(infoResponse.toModel())
-        } ?: Result.Error((response.data?.nickname + response.message))
+        } ?: Result.Error((response.data?.full_data + response.message))
     }
 }

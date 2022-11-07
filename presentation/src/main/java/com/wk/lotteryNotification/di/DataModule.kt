@@ -42,7 +42,6 @@ object DataModule {
     @Singleton
     @Provides
     fun provideOkHttpClient(
-
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -54,7 +53,7 @@ object DataModule {
     fun provideRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
-        .baseUrl("BASE_URL")
+        .baseUrl("https://dhlottery.co.kr/")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

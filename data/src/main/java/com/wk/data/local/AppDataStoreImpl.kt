@@ -33,11 +33,11 @@ class AppDataStoreImpl @Inject constructor(
 
     override suspend fun setLotteryInfo(response: LotteryInfoModel?) {
         if (response != null) {
-            putValue(DataStoreKeys.EMAIL, response.email)
-            putValue(DataStoreKeys.DESCRIPTION, response.description.toString())
-            putValue(DataStoreKeys.NICKNAME, response.nickname)
-            putValue(DataStoreKeys.PROFILE_URL, response.profile_url.toString())
-            putValue(DataStoreKeys.PRIVATEID, response.private_id)
+//            putValue(DataStoreKeys.EMAIL, response.email)
+//            putValue(DataStoreKeys.DESCRIPTION, response.description.toString())
+//            putValue(DataStoreKeys.NICKNAME, response.nickname)
+//            putValue(DataStoreKeys.PROFILE_URL, response.profile_url.toString())
+//            putValue(DataStoreKeys.PRIVATEID, response.private_id)
         }
     }
 }

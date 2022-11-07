@@ -12,6 +12,6 @@ class GetLotteryInfoUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Result<LotteryInfoModel> =
         withContext(Dispatchers.IO) {
-            lotteryInfoRepository.getLotteryInfo()
+            lotteryInfoRepository.getMainLotteryInfo()
         }
 }

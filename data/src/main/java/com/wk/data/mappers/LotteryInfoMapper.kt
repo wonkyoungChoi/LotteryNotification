@@ -5,9 +5,5 @@ import com.wk.domain.models.ui.LotteryInfoModel
 
 fun LotteryInfoResponse.toModel(): LotteryInfoModel =
     LotteryInfoModel(
-        nickname = nickname,
-        description = description,
-        email = email,
-        private_id = private_id,
-        profile_url = profile_url
+        data = full_data
     )

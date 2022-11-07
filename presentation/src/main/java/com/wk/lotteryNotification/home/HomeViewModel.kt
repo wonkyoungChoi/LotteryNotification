@@ -1,5 +1,6 @@
 package com.wk.lotteryNotification.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.wk.lotteryNotification.base.BaseViewModel
 import com.wk.domain.core.Result
@@ -21,7 +22,8 @@ class HomeViewModel @Inject constructor(
                 setState { copy(userInfoResult = Result.Loading()) }
                 viewModelScope.launch {
                     val result = getUserInfoUseCase.invoke()
-                    setState { copy(username = result.data!!.private_id) }
+                    Log.d("ResulttET", result.data.toString())
+//                    setState { copy(username = result.data!!.private_id) }
 
 //                    if (result is Result.Success) {
 //                        Log.d("HomerViewModel", "Result.Success")
