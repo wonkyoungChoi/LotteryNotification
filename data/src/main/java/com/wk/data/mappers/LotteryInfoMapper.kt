@@ -13,14 +13,14 @@ fun LotteryInfoResponse.toMapper(): LotteryInfoModel  {
 
     val body = body.string()
     val doc = body.let { dataToDoc -> Jsoup.parse(dataToDoc) }
-    val lottoNumberData = doc.select("meta[id=desc]").first()?.attr("content")
+    val lottoNumberData = doc.select("meta[id=desc]").first()?.attr("content")!!
 
     val contentData = doc.select("table tbody tr")
     for(data in contentData) {
         val element = data.select("td")
         val rank  = element[0].text() //순위 : 1등, 2등...
-        val money = element[3].text() //당첨마다 받는 돈
-        val winner = element[2].text() //당첨된 사람의 수
+        val money = element[3].text() // 당첨마다 받는 돈
+        val winner = element[2].text() // 당첨된 사람의 수
         contentArray.add(LotteryInfoList(rank, money, winner))
     }
 
@@ -31,7 +31,7 @@ fun LotteryInfoResponse.toMapper(): LotteryInfoModel  {
     )
 }
 
-fun getLotteryRoundParsing(parsingData: String?): String {
+private fun getLotteryRoundParsing(parsingData: String?): String {
     val pattern = Pattern.compile("[0-9]+회")
     val matcher = parsingData?.let { pattern.matcher(it) }
 
@@ -41,7 +41,7 @@ fun getLotteryRoundParsing(parsingData: String?): String {
     } else ""
 }
 
-fun getLotteryNumberParsing(parsingData: String?): String {
+private fun getLotteryNumberParsing(parsingData: String?): String {
     val pattern = Pattern.compile("[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+")
     val matcher = parsingData?.let { pattern.matcher(it) }
 
@@ -50,21 +50,22 @@ fun getLotteryNumberParsing(parsingData: String?): String {
     } else ""
 }
 
-fun getNumber(numberData: String?, bonusData: String?): LotteryNumData {
+private fun getNumber(numberData: String?, bonusData: String?): LotteryNumData {
     val numbers = numberData?.split(",")
-    return if(numbers?.size == 6) LotteryNumData(
-        numbers[0],
-        numbers[1],
-        numbers[2],
-        numbers[3],
-        numbers[4],
-        numbers[5],
-        bonusData
-    )
-    else LotteryNumData()
+    return if (bonusData != null && numbers?.size == 6) {
+            LotteryNumData(
+            numbers[0].toInt(),
+            numbers[1].toInt(),
+            numbers[2].toInt(),
+            numbers[3].toInt(),
+            numbers[4].toInt(),
+            numbers[5].toInt(),
+            bonusData.toInt()
+        )
+    } else LotteryNumData()
 }
 
-fun getBonusNumberParsing(parsingData: String?): String {
+private fun getBonusNumberParsing(parsingData: String?): String {
     val pattern = Pattern.compile("\\+[0-9]+")
     val matcher = parsingData?.let { pattern.matcher(it) }
 

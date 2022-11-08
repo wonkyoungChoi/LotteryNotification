@@ -1,10 +1,9 @@
 package com.wk.lotteryNotification.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.wk.lotteryNotification.base.BaseViewModel
 import com.wk.domain.core.Result
 import com.wk.domain.usecase.GetLotteryInfoUseCase
+import com.wk.lotteryNotification.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,16 +12,29 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getUserInfoUseCase: GetLotteryInfoUseCase
 ): BaseViewModel<HomeViewState, HomeEvent, HomeSideEffect>(HomeViewState()){
+
+    init {
+        setState { copy(lotteryNumData = Result.Loading())}
+        viewModelScope.launch {
+            val result = getUserInfoUseCase.invoke()
+            if(result.data != null) setState {
+                copy(
+                    lotteryRound = result.data!!.lotteryRound,
+                    lotteryNumData = Result.Success(result.data!!.lotteryNumData),
+                    lotteryInfoList = result.data!!.lotteryInfoList
+                )
+            }
+        }
+    }
+
     override fun onEvent(event: HomeEvent) {
+
         when(event) {
-            is HomeEvent.UsernameInputChanged -> setState { copy(username = event.username) }
-            is HomeEvent.PasswordInputChanged -> setState { copy(password = event.password) }
-            is HomeEvent.GrantTypeInputChanged -> setState { copy(grant_type = event.grant_type) }
             is HomeEvent.LoginButtonClicked, HomeEvent.DoneButtonClicked -> {
-                setState { copy(userInfoResult = Result.Loading()) }
+//                setState { copy(userInfoResult = Result.Loading()) }
                 viewModelScope.launch {
                     val result = getUserInfoUseCase.invoke()
-                    Log.d("ResulttET", result.data.toString())
+
 //                    setState { copy(username = result.data!!.private_id) }
 
 //                    if (result is Result.Success) {

@@ -1,11 +1,10 @@
 package com.wk.lotteryNotification.home
 
 import com.wk.domain.core.Result
+import com.wk.domain.models.ui.LotteryInfoList
+import com.wk.domain.models.ui.LotteryNumData
 
 sealed class HomeEvent {
-    data class UsernameInputChanged(val username: String) : HomeEvent()
-    data class PasswordInputChanged(val password: String) : HomeEvent()
-    data class GrantTypeInputChanged(val grant_type: String) : HomeEvent()
     object DoneButtonClicked : HomeEvent()
     object LoginButtonClicked : HomeEvent()
 }
@@ -15,8 +14,7 @@ sealed class HomeSideEffect {
 }
 
 data class HomeViewState(
-    val username: String = "",
-    val password: String = "",
-    val grant_type: String = "",
-    val userInfoResult: Result<Unit> = Result.Success(Unit),
+    val lotteryRound: String = "",
+    val lotteryNumData: Result<LotteryNumData> = Result.Loading(),
+    var lotteryInfoList: ArrayList<LotteryInfoList> = arrayListOf()
 )

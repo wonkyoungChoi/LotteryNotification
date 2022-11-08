@@ -27,7 +27,7 @@ fun BaseApp(
     val systemUiController = rememberSystemUiController()
     val viewState = mainViewModel.uiState.collectAsState().value
 
-    //navController.navigate(HomeScreenDestination)
+//    navController.navigate(HomeScreenDestination)
 
     AppTheme {
         Column(
