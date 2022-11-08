@@ -14,15 +14,19 @@ class HomeViewModel @Inject constructor(
 ): BaseViewModel<HomeViewState, HomeEvent, HomeSideEffect>(HomeViewState()){
 
     init {
-        setState { copy(lotteryNumData = Result.Loading())}
+        setState { copy(dataState = Result.Loading())}
         viewModelScope.launch {
             val result = getUserInfoUseCase.invoke()
-            if(result.data != null) setState {
-                copy(
-                    lotteryRound = result.data!!.lotteryRound,
-                    lotteryNumData = Result.Success(result.data!!.lotteryNumData),
-                    lotteryInfoList = result.data!!.lotteryInfoList
-                )
+
+            if(result.data != null) {
+                setState {
+                    copy(
+                        dataState = result,
+                        lotteryRound = result.data!!.lotteryRound,
+                        lotteryNumData = result.data!!.lotteryNumData,
+                        lotteryInfoList = result.data!!.lotteryInfoList
+                    )
+                }
             }
         }
     }

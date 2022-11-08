@@ -2,6 +2,7 @@ package com.wk.lotteryNotification.home
 
 import com.wk.domain.core.Result
 import com.wk.domain.models.ui.LotteryInfoList
+import com.wk.domain.models.ui.LotteryInfoModel
 import com.wk.domain.models.ui.LotteryNumData
 
 sealed class HomeEvent {
@@ -14,7 +15,8 @@ sealed class HomeSideEffect {
 }
 
 data class HomeViewState(
+    var dataState: Result<LotteryInfoModel> = Result.Loading(),
     val lotteryRound: String = "",
-    val lotteryNumData: Result<LotteryNumData> = Result.Loading(),
+    val lotteryNumData: LotteryNumData = LotteryNumData(),
     var lotteryInfoList: ArrayList<LotteryInfoList> = arrayListOf()
 )

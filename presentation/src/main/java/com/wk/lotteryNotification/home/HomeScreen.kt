@@ -1,33 +1,26 @@
 package com.wk.lotteryNotification.home
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
 import com.wk.lotteryNotification.R
-import com.wk.lotteryNotification.ui.LotteryCirclePlus
-import com.wk.lotteryNotification.ui.LotteryCircleText
-import com.wk.lotteryNotification.ui.LotteryTableRow
-import com.wk.lotteryNotification.ui.LotteryTableTitle
+import com.wk.lotteryNotification.ui.*
 import com.wk.lotteryNotification.util.Constants
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -59,12 +52,13 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Spacer_10()
-            LotteryRoundView(viewState = viewState)
-            Spacer_10()
-            when (viewState.lotteryNumData) {
+            when (viewState.dataState) {
                 is Result.Success -> {
+                    Spacer_10()
+                    LotteryRoundView(viewState = viewState)
+                    Spacer_10()
                     LotteryViews(viewState = viewState)
+                    LotteryInfoTableView(viewState = viewState)
                 }
                 is Result.Error -> {
                     MessagesError(
@@ -75,8 +69,8 @@ fun HomeScreen(
                     LoadingProgress()
                 }
             }
-            
-            LotteryInfoTableView(viewState = viewState)
+
+
 
         }
     }
@@ -102,14 +96,14 @@ fun LotteryViews(viewState: HomeViewState) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        LotteryCircleText(text = viewState.lotteryNumData.data?.firstNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.data?.secondNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.data?.thirdNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.data?.fourthNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.data?.fifthNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.data?.sixthNum.toString())
+        LotteryCircleText(text = viewState.lotteryNumData.firstNum.toString())
+        LotteryCircleText(text = viewState.lotteryNumData.secondNum.toString())
+        LotteryCircleText(text = viewState.lotteryNumData.thirdNum.toString())
+        LotteryCircleText(text = viewState.lotteryNumData.fourthNum.toString())
+        LotteryCircleText(text = viewState.lotteryNumData.fifthNum.toString())
+        LotteryCircleText(text = viewState.lotteryNumData.sixthNum.toString())
         LotteryCirclePlus()
-        LotteryCircleText(text = viewState.lotteryNumData.data?.bonusNum.toString())
+        LotteryCircleText(text = viewState.lotteryNumData.bonusNum.toString())
     }
 }
 
@@ -138,15 +132,6 @@ fun LotteryInfoTableView(viewState: HomeViewState) {
 @Composable
 fun Spacer_10() {
     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.size_10)))
-}
-
-@Composable
-fun ColumnScope.LoadingProgress() {
-    CircularProgressIndicator(
-        modifier = Modifier
-            .padding(dimensionResource(R.dimen.size_16))
-            .align(Alignment.CenterHorizontally)
-    )
 }
 
 @Composable
