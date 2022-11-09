@@ -5,4 +5,5 @@ object Constants{
     const val TOTAL_MONEY = "1인당 당첨금"
     const val WINNER = "당첨자 수"
     const val PEOPLE_NUM = "명"
+    const val MAIN_TYPE = "byWin"
 }

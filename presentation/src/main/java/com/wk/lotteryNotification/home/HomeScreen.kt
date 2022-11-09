@@ -1,14 +1,12 @@
 package com.wk.lotteryNotification.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -21,6 +19,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
 import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.ui.*
+import com.wk.lotteryNotification.ui.main.LotteryRoundButton
 import com.wk.lotteryNotification.util.Constants
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -54,6 +53,9 @@ fun HomeScreen(
         ) {
             when (viewState.dataState) {
                 is Result.Success -> {
+                    LotteryRoundButton(text = viewState.lotteryRound, onClick = {
+                        homeViewModel.onEvent(HomeEvent.DoneButtonClicked)
+                    })
                     Spacer_10()
                     LotteryRoundView(viewState = viewState)
                     Spacer_10()
@@ -69,8 +71,6 @@ fun HomeScreen(
                     LoadingProgress()
                 }
             }
-
-
 
         }
     }

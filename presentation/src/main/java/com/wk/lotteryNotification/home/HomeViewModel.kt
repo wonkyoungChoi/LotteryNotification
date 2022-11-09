@@ -3,20 +3,23 @@ package com.wk.lotteryNotification.home
 import androidx.lifecycle.viewModelScope
 import com.wk.domain.core.Result
 import com.wk.domain.usecase.GetLotteryInfoUseCase
+import com.wk.domain.usecase.GetLotterySearchInfoUseCase
 import com.wk.lotteryNotification.base.BaseViewModel
+import com.wk.lotteryNotification.util.Constants.MAIN_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getUserInfoUseCase: GetLotteryInfoUseCase
+    private val getLotteryInfoUseCase: GetLotteryInfoUseCase,
+    private val getLotterySearchInfoUseCase: GetLotterySearchInfoUseCase
 ): BaseViewModel<HomeViewState, HomeEvent, HomeSideEffect>(HomeViewState()){
 
     init {
         setState { copy(dataState = Result.Loading())}
         viewModelScope.launch {
-            val result = getUserInfoUseCase.invoke()
+            val result = getLotteryInfoUseCase.invoke(MAIN_TYPE)
 
             if(result.data != null) {
                 setState {
@@ -35,16 +38,20 @@ class HomeViewModel @Inject constructor(
 
         when(event) {
             is HomeEvent.LoginButtonClicked, HomeEvent.DoneButtonClicked -> {
-//                setState { copy(userInfoResult = Result.Loading()) }
+                setState { copy(dataState = Result.Loading())}
                 viewModelScope.launch {
-                    val result = getUserInfoUseCase.invoke()
+                    //TODO drwNo 선택할 수 있는 팝업? 혹은 무언가 만들기
+                    val result = getLotterySearchInfoUseCase.invoke(MAIN_TYPE, "947")
 
-//                    setState { copy(username = result.data!!.private_id) }
+                    setState {
+                        copy(
+                            dataState = result,
+                            lotteryRound = result.data!!.lotteryRound,
+                            lotteryNumData = result.data!!.lotteryNumData,
+                            lotteryInfoList = result.data!!.lotteryInfoList
+                        )
+                    }
 
-//                    if (result is Result.Success) {
-//                        Log.d("HomerViewModel", "Result.Success")
-//                        _sideEffects.trySend(HomeSideEffect.NavigateToLoginScreen)
-//                    }
                 }
             }
         }

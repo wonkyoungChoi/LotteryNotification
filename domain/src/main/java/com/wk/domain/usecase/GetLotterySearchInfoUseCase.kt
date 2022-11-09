@@ -7,11 +7,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class GetLotteryInfoUseCase @Inject constructor(
+class GetLotterySearchInfoUseCase @Inject constructor(
     private val lotteryInfoRepository: LotteryInfoRepository
 ) {
-    suspend operator fun invoke(type: String): Result<LotteryInfoModel> =
+    suspend operator fun invoke(type: String, drwNo: String): Result<LotteryInfoModel> =
         withContext(Dispatchers.IO) {
-            lotteryInfoRepository.getLotteryInfo(type)
+            lotteryInfoRepository.getLotterySearchInfo(type, drwNo)
         }
 }
