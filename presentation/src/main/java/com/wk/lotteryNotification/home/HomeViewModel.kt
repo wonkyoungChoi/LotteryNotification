@@ -1,5 +1,6 @@
 package com.wk.lotteryNotification.home
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.wk.domain.core.Result
 import com.wk.domain.usecase.GetLotteryInfoUseCase
@@ -37,11 +38,14 @@ class HomeViewModel @Inject constructor(
     override fun onEvent(event: HomeEvent) {
 
         when(event) {
-            is HomeEvent.LoginButtonClicked, HomeEvent.DoneButtonClicked -> {
+            is HomeEvent.SelectRoundButtonClicked -> {
+                setState { copy(v = mutableStateOf(true)) }
+            }
+            is HomeEvent.RoundButtonTextChanged -> {
                 setState { copy(dataState = Result.Loading())}
                 viewModelScope.launch {
                     //TODO drwNo 선택할 수 있는 팝업? 혹은 무언가 만들기
-                    val result = getLotterySearchInfoUseCase.invoke(MAIN_TYPE, "947")
+                    val result = getLotterySearchInfoUseCase.invoke(MAIN_TYPE, getState().lotteryRound)
 
                     setState {
                         copy(
@@ -51,9 +55,11 @@ class HomeViewModel @Inject constructor(
                             lotteryInfoList = result.data!!.lotteryInfoList
                         )
                     }
-
                 }
+                setState { copy(v = mutableStateOf(false)) }
+
             }
+            else -> {}
         }
     }
 }
