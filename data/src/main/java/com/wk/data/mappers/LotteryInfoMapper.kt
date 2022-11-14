@@ -16,12 +16,24 @@ fun LotteryInfoResponse.toMapper(): LotteryInfoModel  {
     val lottoNumberData = doc.select("meta[id=desc]").first()?.attr("content")!!
 
     val contentData = doc.select("table tbody tr")
-    for(data in contentData) {
-        val element = data.select("td")
+    for(i in contentData.indices) {
+//        <td>1등</td>
+//        <td class="tar"><strong class="color_key1">25,360,314,752원</strong></td>
+//        <td>16</td>
+//        <td class="tar">1,585,019,672원</td>
+//        <td>당첨번호 <strong class="length">6개</strong> 숫자일치</td>
+//        <td rowspan="5"> 1등<br> 자동15<br> 반자동1 </td>
+        val element = contentData[i].select("td")
         val rank  = element[0].text() //순위 : 1등, 2등...
-        val money = element[3].text() // 당첨마다 받는 돈
+        val totalMoney = element[1].text() //총 당첨금액
         val winner = element[2].text() // 당첨된 사람의 수
-        contentArray.add(LotteryInfoList(rank, money, winner))
+        val money = element[3].text() // 당첨마다 받는 돈
+        if(i == 0) {
+            val type =  element[5].text() // 번호 뽑은 타입(자동, 반자동, 수동)
+            contentArray.add(LotteryInfoList(getLotteryTypeParsing(type), totalMoney, rank, money, winner))
+        } else {
+            contentArray.add(LotteryInfoList(null, null, rank, money, winner))
+        }
     }
 
     return LotteryInfoModel(
@@ -29,6 +41,36 @@ fun LotteryInfoResponse.toMapper(): LotteryInfoModel  {
         lotteryNumData = getNumber(getLotteryNumberParsing(lottoNumberData), getBonusNumberParsing(lottoNumberData)),
         lotteryInfoList = contentArray
     )
+}
+
+private fun getLotteryTypeParsing(type: String): ArrayList<String> {
+    val typeList = arrayListOf<String>()
+    val types = type.split(" ")
+    for(i in types.indices) {
+        with(types[i]) {
+            when {
+                contains("자동") -> {
+                    val parseType = typeParser(types[i], "자동")
+                    typeList.add(parseType)
+                }
+                contains("반자동") -> {
+                    val parseType = typeParser(types[i], "반자동")
+                    typeList.add(parseType)
+                }
+                contains("수동") -> {
+                    val parseType = typeParser(types[i], "수동")
+                    typeList.add(parseType)
+                }
+                else -> {}
+            }
+        }
+
+    }
+    return typeList
+}
+
+private fun typeParser(type: String, replaceWord: String): String {
+    return type.replace(replaceWord, "$replaceWord : ") + "회"
 }
 
 private fun getLotteryRoundParsing(parsingData: String?): String {

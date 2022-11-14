@@ -22,6 +22,8 @@ data class LotteryNumData(
 
 @Serializable
 data class LotteryInfoList(
+    var type: ArrayList<String>? = null,
+    var totalMoney: String? = "",
     var rank: String = "",
     var takeMoney: String = "",
     var winner: String = ""
