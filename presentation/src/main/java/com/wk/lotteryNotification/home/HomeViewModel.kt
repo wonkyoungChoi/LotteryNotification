@@ -26,6 +26,7 @@ class HomeViewModel @Inject constructor(
                 setState {
                     copy(
                         dataState = result,
+                        totalRound = result.data!!.lotteryRound,
                         lotteryRound = result.data!!.lotteryRound,
                         lotteryNumData = result.data!!.lotteryNumData,
                         lotteryInfoList = result.data!!.lotteryInfoList
@@ -45,7 +46,7 @@ class HomeViewModel @Inject constructor(
                 setState { copy(dataState = Result.Loading())}
                 viewModelScope.launch {
                     //TODO drwNo 선택할 수 있는 팝업? 혹은 무언가 만들기
-                    val result = getLotterySearchInfoUseCase.invoke(MAIN_TYPE, getState().lotteryRound)
+                    val result = getLotterySearchInfoUseCase.invoke(MAIN_TYPE, event.round)
 
                     setState {
                         copy(

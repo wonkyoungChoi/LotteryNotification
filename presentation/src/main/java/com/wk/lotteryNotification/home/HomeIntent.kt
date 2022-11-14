@@ -20,6 +20,7 @@ sealed class HomeSideEffect {
 data class HomeViewState(
     val v : MutableState<Boolean> = mutableStateOf(false),
     var dataState: Result<LotteryInfoModel> = Result.Loading(),
+    val totalRound: String = "",
     val lotteryRound: String = "",
     val lotteryNumData: LotteryNumData = LotteryNumData(),
     var lotteryInfoList: ArrayList<LotteryInfoList> = arrayListOf()

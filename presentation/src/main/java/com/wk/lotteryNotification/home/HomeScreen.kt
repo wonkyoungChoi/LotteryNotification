@@ -1,23 +1,17 @@
 package com.wk.lotteryNotification.home
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -38,8 +32,7 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val viewState = homeViewModel.uiState.collectAsState().value
-    var text by remember { mutableStateOf("Initial Text")
-    }
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -61,13 +54,12 @@ fun HomeScreen(
         ) {
             when (viewState.dataState) {
                 is Result.Success -> {
-                    if(viewState.v.value) InputSelectDialogView(viewState = viewState, onClick = {
-                        homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged("11"))
+                    if(viewState.v.value) InputSelectDialogView(round = viewState.totalRound, viewState = viewState, onClick = {
+                        homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged(it))
                     })
                     LotteryRoundButton(text = viewState.lotteryRound, onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectRoundButtonClicked)
                     })
-
                     Spacer_10()
                     LotteryRoundView(viewState = viewState)
                     Spacer_10()
@@ -84,54 +76,6 @@ fun HomeScreen(
                 }
             }
 
-        }
-    }
-}
-}
-
-@Composable
-fun InputSelectDialogView(
-    viewState: HomeViewState,
-    onClick: () -> Unit) {
-    val scrollState = rememberScrollState()
-    MaterialTheme {
-        if(viewState.v.value) {
-            AlertDialog(
-                onDismissRequest = { viewState.v.value = false },
-                title = {
-                    Text(
-                        modifier = Modifier.padding(top = dimensionResource(id = R.dimen.size_10), bottom = dimensionResource(id = R.dimen.size_10)),
-                        text = "TESTTITLE",
-                        fontWeight = FontWeight(700),
-                    )
-                },
-                text = {
-                    Column {
-                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.size_24)))
-                        LazyColumn {
-                            items(count = 100) { position ->
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable(
-                                            enabled = true,
-                                            interactionSource = remember { MutableInteractionSource() },
-                                            indication = rememberRipple(bounded = true),
-                                            onClick = onClick
-                                        )
-                                        .padding(
-                                            top = dimensionResource(id = R.dimen.size_10),
-                                            bottom = dimensionResource(id = R.dimen.size_10)
-                                        ),
-                                    text = (viewState.lotteryRound.toInt() - position).toString(),
-                                    color = colorResource(id = R.color.black),
-                                )
-                            }
-                        }
-                    }
-                },
-                confirmButton = {}
-            )
         }
     }
 }
