@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 data class LotteryInfoModel(
     var lotteryRound: String,
     var lotteryNumData: LotteryNumData,
-    var lotteryInfoList: ArrayList<LotteryInfoList>
+    var lotteryInfoList: ArrayList<LotteryInfoList>,
+    var lotteryDate: String
 )
 
 @Serializable

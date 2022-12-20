@@ -29,7 +29,8 @@ class HomeViewModel @Inject constructor(
                         totalRound = result.data!!.lotteryRound,
                         lotteryRound = result.data!!.lotteryRound,
                         lotteryNumData = result.data!!.lotteryNumData,
-                        lotteryInfoList = result.data!!.lotteryInfoList
+                        lotteryInfoList = result.data!!.lotteryInfoList,
+                        lotteryDate = result.data!!.lotteryDate
                     )
                 }
             }
@@ -53,7 +54,8 @@ class HomeViewModel @Inject constructor(
                             dataState = result,
                             lotteryRound = result.data!!.lotteryRound,
                             lotteryNumData = result.data!!.lotteryNumData,
-                            lotteryInfoList = result.data!!.lotteryInfoList
+                            lotteryInfoList = result.data!!.lotteryInfoList,
+                            lotteryDate = result.data!!.lotteryDate
                         )
                     }
                 }

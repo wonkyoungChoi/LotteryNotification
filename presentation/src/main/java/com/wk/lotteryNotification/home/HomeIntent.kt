@@ -23,5 +23,6 @@ data class HomeViewState(
     val totalRound: String = "",
     val lotteryRound: String = "",
     val lotteryNumData: LotteryNumData = LotteryNumData(),
-    var lotteryInfoList: ArrayList<LotteryInfoList> = arrayListOf()
+    var lotteryInfoList: ArrayList<LotteryInfoList> = arrayListOf(),
+    val lotteryDate: String = ""
 )

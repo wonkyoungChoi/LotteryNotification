@@ -57,11 +57,13 @@ fun HomeScreen(
                     if(viewState.v.value) InputSelectDialogView(round = viewState.totalRound, viewState = viewState, onClick = {
                         homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged(it))
                     })
-                    LotteryRoundButton(text = viewState.lotteryRound, onClick = {
+                    LotteryRoundButton(text = viewState.lotteryRound + "회", onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectRoundButtonClicked)
                     })
                     Spacer_10()
                     LotteryRoundView(viewState = viewState)
+                    Spacer_10()
+                    LotteryDateView(viewState = viewState)
                     Spacer_10()
                     LotteryViews(viewState = viewState)
                     LotteryInfoTableView(viewState = viewState)
@@ -88,7 +90,19 @@ fun LotteryRoundView(viewState: HomeViewState) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = viewState.lotteryRound)
+        Text(text = viewState.lotteryRound + "회")
+    }
+}
+
+@Composable
+fun LotteryDateView(viewState: HomeViewState) {
+    Row(
+        modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.size_10))
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(text = viewState.lotteryDate)
     }
 }
 

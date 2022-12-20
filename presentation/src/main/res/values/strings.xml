@@ -2,4 +2,5 @@
     <string name="app_name">LotteryNotification</string>
     <string name="connecting">Connecting…</string>
     <string name="connection_not_available">Internet connection not available</string>
+    <string name="lottery_round">로또 회차</string>
 </resources>

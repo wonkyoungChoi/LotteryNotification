@@ -1,5 +1,6 @@
 package com.wk.data.mappers
 
+import android.util.Log
 import com.wk.data.remote.responses.LotteryInfoResponse
 import com.wk.domain.models.ui.LotteryInfoList
 import com.wk.domain.models.ui.LotteryInfoModel
@@ -15,6 +16,8 @@ fun LotteryInfoResponse.toMapper(): LotteryInfoModel  {
     val doc = body.let { dataToDoc -> Jsoup.parse(dataToDoc) }
     val lottoNumberData = doc.select("meta[id=desc]").first()?.attr("content")!!
 
+
+    //로또 당첨관련 정보
     val contentData = doc.select("table tbody tr")
     for(i in contentData.indices) {
 //        <td>1등</td>
@@ -36,10 +39,19 @@ fun LotteryInfoResponse.toMapper(): LotteryInfoModel  {
         }
     }
 
+    //날짜 값
+    var date = ""
+    val data = doc.select ("div[class=win_result] p[class=desc]")
+    data.first()?.text()?.let {
+        date = it.replace("(", "")
+        date = date.replace(")", "")
+    }
+
     return LotteryInfoModel(
         lotteryRound = getLotteryRoundParsing(lottoNumberData),
         lotteryNumData = getNumber(getLotteryNumberParsing(lottoNumberData), getBonusNumberParsing(lottoNumberData)),
-        lotteryInfoList = contentArray
+        lotteryInfoList = contentArray,
+        lotteryDate = date
     )
 }
 
