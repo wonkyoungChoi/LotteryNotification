@@ -9,8 +9,10 @@ import com.wk.domain.models.ui.LotteryInfoModel
 import com.wk.domain.models.ui.LotteryNumData
 
 sealed class HomeEvent {
-    data class RoundButtonTextChanged(val round: String) : HomeEvent()
+    data class RoundButtonTextChanged(val type: String, val round: String) : HomeEvent()
+    data class TypeButtonTextChanged(val type: String) : HomeEvent()
     object SelectRoundButtonClicked : HomeEvent()
+    object SelectTypeButtonClicked : HomeEvent()
 }
 
 sealed class HomeSideEffect {
@@ -18,7 +20,9 @@ sealed class HomeSideEffect {
 }
 
 data class HomeViewState(
-    val v : MutableState<Boolean> = mutableStateOf(false),
+    val type : String = Type.MAIN.key,
+    val roundSelected : MutableState<Boolean> = mutableStateOf(false),
+    val typeSelected : MutableState<Boolean> = mutableStateOf(false),
     var dataState: Result<LotteryInfoModel> = Result.Loading(),
     val totalRound: String = "",
     val lotteryRound: String = "",
@@ -26,3 +30,8 @@ data class HomeViewState(
     var lotteryInfoList: ArrayList<LotteryInfoList> = arrayListOf(),
     val lotteryDate: String = ""
 )
+
+enum class Type(val key: String) {
+    MAIN("main"),
+    PENSION("pension")
+}

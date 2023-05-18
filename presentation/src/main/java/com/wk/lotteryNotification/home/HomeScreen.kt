@@ -1,5 +1,6 @@
 package com.wk.lotteryNotification.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -19,7 +20,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
 import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.ui.*
-import com.wk.lotteryNotification.ui.main.InputSelectDialogView
+import com.wk.lotteryNotification.ui.main.InputSelectRoundDialogView
+import com.wk.lotteryNotification.ui.main.InputSelectTypeDialogView
 import com.wk.lotteryNotification.ui.main.LotteryRoundButton
 import com.wk.lotteryNotification.util.Constants
 
@@ -54,9 +56,18 @@ fun HomeScreen(
         ) {
             when (viewState.dataState) {
                 is Result.Success -> {
-                    if(viewState.v.value) InputSelectDialogView(round = viewState.totalRound, viewState = viewState, onClick = {
-                        homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged(it))
+                    if(viewState.typeSelected.value) InputSelectTypeDialogView(type = viewState.type, viewState = viewState, onClick = {
+                        homeViewModel.onEvent(HomeEvent.TypeButtonTextChanged(it))
                     })
+                    Log.d("RoundCheck", viewState.type)
+                    if(viewState.roundSelected.value) InputSelectRoundDialogView(round = viewState.totalRound, viewState = viewState, onClick = {
+                        Log.d("RoundCheck", it.toString())
+                        homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged(viewState.type, it))
+                    })
+                    LotteryRoundButton(text = viewState.type, onClick = {
+                        homeViewModel.onEvent(HomeEvent.SelectTypeButtonClicked)
+                    })
+                    Spacer_10()
                     LotteryRoundButton(text = viewState.lotteryRound + "회", onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectRoundButtonClicked)
                     })
