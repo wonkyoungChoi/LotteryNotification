@@ -11,7 +11,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface DomainModule {
-
     @Singleton
     @Binds
     fun bindLotteryInfoRepository(lotteryInfoRepositoryImpl: LotteryInfoRepositoryImpl): LotteryInfoRepository

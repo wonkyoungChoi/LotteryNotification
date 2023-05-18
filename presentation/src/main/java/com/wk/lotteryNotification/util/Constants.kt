@@ -6,4 +6,5 @@ object Constants{
     const val WINNER = "당첨자 수"
     const val PEOPLE_NUM = "명"
     const val MAIN_TYPE = "byWin"
+    const val PENSION_TYPE = "win720"
 }

@@ -65,7 +65,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideUserInfoService(
+    fun provideLotteryInfoService(
         retrofit: Retrofit
     ): LotteryInfoApi = retrofit.create(LotteryInfoApi::class.java)
 

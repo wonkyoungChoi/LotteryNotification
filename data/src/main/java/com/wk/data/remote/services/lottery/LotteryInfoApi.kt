@@ -17,4 +17,12 @@ interface LotteryInfoApi {
     @FormUrlEncoded
     @POST("gameResult.do/")
     suspend fun getLotteryRoundSearch(@Field("method") main: String, @Query("drwNo") drwNo: String): Response<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("gameResult.do/")
+    suspend fun getPensionLotteryInfo(@Field("method") main: String): Response<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("gameResult.do/")
+    suspend fun getPensionLotteryRoundSearch(@Field("method") main: String, @Query("Round") round: String): Response<ResponseBody>
 }
