@@ -18,6 +18,7 @@ fun PensionLotteryInfoResponse.toMapper(): LotteryInfoModel  {
 
     //로또 당첨관련 정보
     val contentData = doc.select("table tbody tr")
+    //val lottoNumberData = contentData[0].select("td [class=ta_right]").first()?.attr("content")
     for(i in contentData.indices) {
 //        <tr>
 //        <td>보너스</td>
@@ -50,20 +51,23 @@ fun PensionLotteryInfoResponse.toMapper(): LotteryInfoModel  {
 //        <td rowspan="5"> 1등<br> 자동15<br> 반자동1 </td>
         val element = contentData[i].select("td")
         val rank  = element[0].text() //순위 : 1등, 2등...
-        val totalMoney = element[1].text() //총 당첨금액
-        val winner = element[2].text() // 당첨된 사람의 수
-        val money = element[3].text() // 당첨마다 받는 돈
-        if(i == 0) {
-            val type =  element[5].text() // 번호 뽑은 타입(자동, 반자동, 수동)
-            contentArray.add(LotteryInfoList(getLotteryTypeParsing(type), totalMoney, rank, money, winner))
-        } else {
-            contentArray.add(LotteryInfoList(null, null, rank, money, winner))
+        when(i) {
+            0, contentData.size - 1 -> {
+                val winner = element[5].text() // 당첨된 사람의 수
+                val money = element[4].text() // 당첨마다 받는 돈
+                contentArray.add(LotteryInfoList(null, "0", rank, money, winner))
+            }
+            else -> {
+                val winner = element[4].text() // 당첨된 사람의 수
+                val money = element[3].text() // 당첨마다 받는 돈
+                contentArray.add(LotteryInfoList(null, null, rank, money, winner))
+            }
         }
     }
 
     //날짜 값
     var date = ""
-    val data = doc.select ("div[class=win_result] p[class=desc]")
+    val data = doc.select ("div[class=win_result al720] p[class=desc]")
     data.first()?.text()?.let {
         date = it.replace("(", "")
         date = date.replace(")", "")
