@@ -1,10 +1,13 @@
 package com.wk.data.mappers
 
+import android.util.Log
 import com.wk.data.remote.responses.PensionLotteryInfoResponse
 import com.wk.domain.models.ui.LotteryInfoList
 import com.wk.domain.models.ui.LotteryInfoModel
 import com.wk.domain.models.ui.LotteryNumData
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 import java.util.regex.Pattern
 
 fun PensionLotteryInfoResponse.toMapper(): LotteryInfoModel  {
@@ -20,35 +23,6 @@ fun PensionLotteryInfoResponse.toMapper(): LotteryInfoModel  {
     val contentData = doc.select("table tbody tr")
     //val lottoNumberData = contentData[0].select("td [class=ta_right]").first()?.attr("content")
     for(i in contentData.indices) {
-//        <tr>
-//        <td>보너스</td>
-//        <td>보너스<br>번호기준</td>
-//        <td class="ta_right">
-//        <div class="win720_num">
-//        <span class='num al720_color1'><span>2</span></span>
-//        <span class='num al720_color2'><span>6</span></span>
-//        <span class='num al720_color3'><span>9</span></span>
-//        <span class='num al720_color4'><span>2</span></span>
-//        <span class='num al720_color5'><span>5</span></span>
-//        <span class='num al720_color6'><span>4</span></span>
-//
-//        </div>
-//        </td>
-//        <td class="bl0">6자리 일치</td>
-//        <td class="ta_right color_key1">월 100만원x10년</td>
-//        <td class="ta_right">10</td>
-//        <!-- <td class="ta_right">1</td>
-//        <td class="ta_right">2</td> -->
-//        </tr>
-//        </tbody>
-//        </table>
-
-//        <td>1등</td>
-//        <td class="tar"><strong class="color_key1">25,360,314,752원</strong></td>
-//        <td>16</td>
-//        <td class="tar">1,585,019,672원</td>
-//        <td>당첨번호 <strong class="length">6개</strong> 숫자일치</td>
-//        <td rowspan="5"> 1등<br> 자동15<br> 반자동1 </td>
         val element = contentData[i].select("td")
         val rank  = element[0].text() //순위 : 1등, 2등...
         when(i) {
@@ -73,9 +47,12 @@ fun PensionLotteryInfoResponse.toMapper(): LotteryInfoModel  {
         date = date.replace(")", "")
     }
 
+    val numbers = doc.select ("div[class=win_result al720] div[class=win_num_wrap] div[class=win720_num] span span")
+
     return LotteryInfoModel(
         lotteryRound = getLotteryRoundParsing(lottoNumberData),
-        lotteryNumData = getNumber(getLotteryNumberParsing(lottoNumberData), getBonusNumberParsing(lottoNumberData)),
+        lotteryNumData = getNumber(getNumberParsing(numbers)),
+        bonusNumData = getNumber(getBonusNumberParsing(numbers)),
         lotteryInfoList = contentArray,
         lotteryDate = date
     )
@@ -115,41 +92,57 @@ private fun getLotteryRoundParsing(parsingData: String?): String {
     val pattern = Pattern.compile("[0-9]+회")
     val matcher = parsingData?.let { pattern.matcher(it) }
 
-    return if(matcher?.find() == true) {
+    return if (matcher?.find() == true) {
         val findData = matcher.group()
         findData.substring(0, findData.length - 1)
     } else ""
 }
 
-private fun getLotteryNumberParsing(parsingData: String?): String {
-    val pattern = Pattern.compile("[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+")
-    val matcher = parsingData?.let { pattern.matcher(it) }
-
-    return if(matcher?.find() == true) {
-        matcher.group()
-    } else ""
-}
-
-private fun getNumber(numberData: String?, bonusData: String?): LotteryNumData {
-    val numbers = numberData?.split(",")
-    return if (bonusData != null && numbers?.size == 6) {
-            LotteryNumData(
-            numbers[0].toInt(),
-            numbers[1].toInt(),
-            numbers[2].toInt(),
-            numbers[3].toInt(),
-            numbers[4].toInt(),
-            numbers[5].toInt(),
-            bonusData.toInt()
+private fun getNumber(numbers: ArrayList<String>): LotteryNumData {
+    return  if(numbers.size == 7) {
+        LotteryNumData(
+            numbers[0],
+            numbers[1],
+            numbers[2],
+            numbers[3],
+            numbers[4],
+            numbers[5],
+            numbers[6]
         )
     } else LotteryNumData()
 }
 
-private fun getBonusNumberParsing(parsingData: String?): String {
-    val pattern = Pattern.compile("\\+[0-9]+")
-    val matcher = parsingData?.let { pattern.matcher(it) }
+private fun getNumberParsing(numbers: Elements): ArrayList<String> {
+    val winNums = arrayListOf<String>()
+    for(i in 0..6) {
+        try {
+            if(i == 0) {
+                Log.d("NumberCheck", numbers[i].text())
+                winNums.add(numbers[i].text() + "조")
+            } else {
+                winNums.add(numbers[i].text())
+            }
+        } catch (e: Exception) {
+            winNums.add("")
+            e.printStackTrace()
+        }
+    }
+    return winNums
+}
 
-    return if(matcher?.find() == true) {
-        matcher.group()
-    } else ""
+private fun getBonusNumberParsing(numbers: ArrayList<Element>): ArrayList<String> {
+    val bonusNums = arrayListOf<String>()
+    for(i in 7..13) {
+        try {
+            if(i == 7) {
+                bonusNums.add(numbers[i].text() + "조")
+            } else {
+                bonusNums.add(numbers[i].text())
+            }
+        } catch (e: Exception) {
+            bonusNums.add("")
+            e.printStackTrace()
+        }
+    }
+    return bonusNums
 }

@@ -22,6 +22,7 @@ import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.ui.*
 import com.wk.lotteryNotification.ui.main.InputSelectRoundDialogView
 import com.wk.lotteryNotification.ui.main.InputSelectTypeDialogView
+import com.wk.lotteryNotification.ui.main.LotteryCircleText
 import com.wk.lotteryNotification.ui.main.LotteryRoundButton
 import com.wk.lotteryNotification.util.Constants
 
@@ -61,7 +62,7 @@ fun HomeScreen(
                     })
                     Log.d("RoundCheck", viewState.type)
                     if(viewState.roundSelected.value) InputSelectRoundDialogView(round = viewState.totalRound, viewState = viewState, onClick = {
-                        Log.d("RoundCheck", it.toString())
+                        Log.d("RoundCheck", it)
                         homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged(viewState.type, it))
                     })
                     LotteryRoundButton(text = viewState.type, onClick = {
@@ -131,7 +132,9 @@ fun LotteryViews(viewState: HomeViewState) {
         LotteryCircleText(text = viewState.lotteryNumData.fourthNum.toString())
         LotteryCircleText(text = viewState.lotteryNumData.fifthNum.toString())
         LotteryCircleText(text = viewState.lotteryNumData.sixthNum.toString())
-        LotteryCirclePlus()
+        if(viewState.lotteryNumData.firstNum?.contains("조") == false) {
+            LotteryCirclePlus()
+        }
         LotteryCircleText(text = viewState.lotteryNumData.bonusNum.toString())
     }
 }

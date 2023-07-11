@@ -108,13 +108,13 @@ private fun getNumber(numberData: String?, bonusData: String?): LotteryNumData {
     val numbers = numberData?.split(",")
     return if (bonusData != null && numbers?.size == 6) {
             LotteryNumData(
-            numbers[0].toInt(),
-            numbers[1].toInt(),
-            numbers[2].toInt(),
-            numbers[3].toInt(),
-            numbers[4].toInt(),
-            numbers[5].toInt(),
-            bonusData.toInt()
+            numbers[0],
+            numbers[1],
+            numbers[2],
+            numbers[3],
+            numbers[4],
+            numbers[5],
+            bonusData
         )
     } else LotteryNumData()
 }

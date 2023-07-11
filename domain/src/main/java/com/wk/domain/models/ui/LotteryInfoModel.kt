@@ -6,19 +6,20 @@ import kotlinx.serialization.Serializable
 data class LotteryInfoModel(
     var lotteryRound: String,
     var lotteryNumData: LotteryNumData,
+    var bonusNumData: LotteryNumData? = null,
     var lotteryInfoList: ArrayList<LotteryInfoList>,
     var lotteryDate: String
 )
 
 @Serializable
 data class LotteryNumData(
-    var firstNum: Int? = 0,
-    var secondNum: Int? = 0,
-    var thirdNum: Int? = 0,
-    var fourthNum: Int? = 0,
-    var fifthNum: Int? = 0,
-    var sixthNum: Int? = 0,
-    var bonusNum: Int? = 0
+    var firstNum: String? = "",
+    var secondNum: String? = "",
+    var thirdNum: String? = "",
+    var fourthNum: String? = "",
+    var fifthNum: String? = "",
+    var sixthNum: String? = "",
+    var bonusNum: String? = "",
 )
 
 @Serializable
