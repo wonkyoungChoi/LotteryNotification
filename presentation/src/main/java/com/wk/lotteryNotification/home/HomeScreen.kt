@@ -18,6 +18,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
+import com.wk.domain.models.ui.LotteryNumData
 import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.ui.*
 import com.wk.lotteryNotification.ui.main.InputSelectRoundDialogView
@@ -78,6 +79,10 @@ fun HomeScreen(
                     LotteryDateView(viewState = viewState)
                     Spacer_10()
                     LotteryViews(viewState = viewState)
+                    if(viewState.lotteryBonusNumData != LotteryNumData()) {
+                        Spacer_10()
+                        LotteryPensionBonusViews(viewState = viewState)
+                    }
                     LotteryInfoTableView(viewState = viewState)
                 }
                 is Result.Error -> {
@@ -136,6 +141,24 @@ fun LotteryViews(viewState: HomeViewState) {
             LotteryCirclePlus()
         }
         LotteryCircleText(text = viewState.lotteryNumData.bonusNum.toString())
+    }
+}
+
+@Composable
+fun LotteryPensionBonusViews(viewState: HomeViewState) {
+    Row(
+        modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.size_10))
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        LotteryCircleText(text = viewState.lotteryBonusNumData.firstNum.toString())
+        LotteryCircleText(text = viewState.lotteryBonusNumData.secondNum.toString())
+        LotteryCircleText(text = viewState.lotteryBonusNumData.thirdNum.toString())
+        LotteryCircleText(text = viewState.lotteryBonusNumData.fourthNum.toString())
+        LotteryCircleText(text = viewState.lotteryBonusNumData.fifthNum.toString())
+        LotteryCircleText(text = viewState.lotteryBonusNumData.sixthNum.toString())
+        LotteryCircleText(text = viewState.lotteryBonusNumData.bonusNum.toString())
     }
 }
 
