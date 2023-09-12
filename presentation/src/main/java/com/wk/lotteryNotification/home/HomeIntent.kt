@@ -2,7 +2,6 @@ package com.wk.lotteryNotification.home
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import com.wk.domain.core.Result
 import com.wk.domain.models.ui.LotteryInfoList
 import com.wk.domain.models.ui.LotteryInfoModel
@@ -13,10 +12,13 @@ sealed class HomeEvent {
     data class TypeButtonTextChanged(val type: String) : HomeEvent()
     object SelectRoundButtonClicked : HomeEvent()
     object SelectTypeButtonClicked : HomeEvent()
+    object SelectQrScanButtonClicked : HomeEvent()
+    object SelectGoToSetting : HomeEvent()
 }
 
 sealed class HomeSideEffect {
-    object NavigateToLoginScreen : HomeSideEffect()
+    object NavigateToQrCheckScreen : HomeSideEffect()
+    object GoToSetting : HomeSideEffect()
 }
 
 data class HomeViewState(

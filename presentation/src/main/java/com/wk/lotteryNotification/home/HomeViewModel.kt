@@ -53,11 +53,15 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.SelectRoundButtonClicked -> {
                 setState { copy(roundSelected = mutableStateOf(true)) }
             }
+            is HomeEvent.SelectQrScanButtonClicked -> {
+                _sideEffects.trySend(HomeSideEffect.NavigateToQrCheckScreen)
+            }
+            is HomeEvent.SelectGoToSetting -> {
+                _sideEffects.trySend(HomeSideEffect.GoToSetting)
+            }
             is HomeEvent.TypeButtonTextChanged -> {
                 setState { copy(dataState = Result.Loading())}
                 viewModelScope.launch {
-                    //TODO drwNo 선택할 수 있는 팝업? 혹은 무언가 만들기
-
                     when(event.type) {
                         Type.MAIN.key -> {
                             val result = getLotteryInfoUseCase.invoke(MAIN_TYPE)
@@ -106,7 +110,6 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.RoundButtonTextChanged -> {
                 setState { copy(dataState = Result.Loading())}
                 viewModelScope.launch {
-                    //TODO drwNo 선택할 수 있는 팝업? 혹은 무언가 만들기
                     when(event.type) {
                         Type.MAIN.key -> {
                             val result = getLotterySearchInfoUseCase.invoke(MAIN_TYPE, event.round)

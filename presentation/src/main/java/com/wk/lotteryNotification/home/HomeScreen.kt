@@ -1,7 +1,24 @@
 package com.wk.lotteryNotification.home
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.CATEGORY_DEFAULT
+import android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.Intent.FLAG_ACTIVITY_NO_HISTORY
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.util.Log
+import android.view.View.OnClickListener
+import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -10,20 +27,29 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
 import com.wk.domain.models.ui.LotteryNumData
 import com.wk.lotteryNotification.R
+import com.wk.lotteryNotification.destinations.QrScanScreenDestination
 import com.wk.lotteryNotification.ui.*
 import com.wk.lotteryNotification.ui.main.InputSelectRoundDialogView
 import com.wk.lotteryNotification.ui.main.InputSelectTypeDialogView
 import com.wk.lotteryNotification.ui.main.LotteryCircleText
+import com.wk.lotteryNotification.ui.main.LotteryQrScanButton
 import com.wk.lotteryNotification.ui.main.LotteryRoundButton
 import com.wk.lotteryNotification.util.Constants
 
@@ -40,11 +66,25 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val context = LocalContext.current
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            homeViewModel.onEvent(HomeEvent.SelectQrScanButtonClicked)
+        } else {
+            Toast.makeText(context, "QRCode를 스캔하기 위해서는 카메라 권한이 필요합니다.", Toast.LENGTH_SHORT). show()
+        }
+    }
+
     LaunchedEffect(homeViewModel.sideEffects) {
         homeViewModel.sideEffects.collect { sideEffect ->
-//            when (sideEffect) {
-//                is LoginSideEffect.NavigateToHomeScreen -> navigator.navigate(HomeScreenDestination)
-//            }
+            when (sideEffect) {
+                is HomeSideEffect.NavigateToQrCheckScreen -> { navigator.navigate(QrScanScreenDestination) }
+                is HomeSideEffect.GoToSetting -> { context.openAppSettings() }
+                else -> {}
+            }
         }
     }
 
@@ -54,18 +94,19 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             when (viewState.dataState) {
                 is Result.Success -> {
+
                     if(viewState.typeSelected.value) InputSelectTypeDialogView(type = viewState.type, viewState = viewState, onClick = {
                         homeViewModel.onEvent(HomeEvent.TypeButtonTextChanged(it))
                     })
-                    Log.d("RoundCheck", viewState.type)
+
                     if(viewState.roundSelected.value) InputSelectRoundDialogView(round = viewState.totalRound, viewState = viewState, onClick = {
-                        Log.d("RoundCheck", it)
                         homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged(viewState.type, it))
                     })
+
                     LotteryRoundButton(text = viewState.type, onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectTypeButtonClicked)
                     })
@@ -73,6 +114,8 @@ fun HomeScreen(
                     LotteryRoundButton(text = viewState.lotteryRound + "회", onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectRoundButtonClicked)
                     })
+                    Spacer_10()
+                    LotteryQrScanView(homeViewModel = homeViewModel)
                     Spacer_10()
                     LotteryRoundView(viewState = viewState)
                     Spacer_10()
@@ -97,6 +140,53 @@ fun HomeScreen(
 
         }
     }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun LotteryQrScanView(homeViewModel: HomeViewModel) {
+    val context = LocalContext.current
+
+    // Camera permission state
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA) { isGranted: Boolean ->
+        if (isGranted) {
+            homeViewModel.onEvent(HomeEvent.SelectQrScanButtonClicked)
+        } else {
+            Toast.makeText(context, "QRCode를 스캔하기 위해서는 카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    LotteryQrScanButton(onClick = {
+//        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+//            == PackageManager.PERMISSION_GRANTED){
+//            homeViewModel.onEvent(HomeEvent.SelectQrScanButtonClicked)
+//        } else {
+//            cameraPermissionState.launchPermissionRequest()
+//        }
+        if (cameraPermissionState.status.isGranted) {
+            homeViewModel.onEvent(HomeEvent.SelectQrScanButtonClicked)
+        } else {
+            if(cameraPermissionState.status.shouldShowRationale) {
+                Toast.makeText(context, "QRCode를 스캔하기 위해서는 카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                homeViewModel.onEvent(HomeEvent.SelectGoToSetting)
+            } else {
+                Toast.makeText(context, "QRCode를 스캔하기 위해서는 카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                cameraPermissionState.launchPermissionRequest()
+            }
+        }
+    })
+}
+
+fun Context.openAppSettings() {
+    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", packageName, null)
+        addCategory(CATEGORY_DEFAULT)
+        addFlags(FLAG_ACTIVITY_NEW_TASK)
+        addFlags(FLAG_ACTIVITY_NO_HISTORY)
+        addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+    }
+
+    startActivity(intent)
 }
 
 @Composable
