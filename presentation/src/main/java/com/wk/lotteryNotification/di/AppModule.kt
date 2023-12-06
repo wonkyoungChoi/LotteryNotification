@@ -2,8 +2,8 @@ package com.wk.lotteryNotification.di
 
 import android.content.Context
 import android.net.ConnectivityManager
-import com.medium.client.common.wrappers.connectivity.NetworkConnectivityManager
-import com.medium.client.common.wrappers.connectivity.NetworkConnectivityManagerImpl
+import com.wk.data.common.wrappers.NetworkConnectivityManager
+import com.wk.data.common.wrappers.NetworkConnectivityManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

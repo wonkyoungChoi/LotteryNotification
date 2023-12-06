@@ -10,11 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.medium.client.common.wrappers.connectivity.NetworkStatus
-import com.medium.client.presentation.ui.theme.AppTheme
+import com.wk.lotteryNotification.ui.theme.AppTheme
+import com.wk.data.common.wrappers.NetworkStatus
 import com.ramcosta.composedestinations.DestinationsNavHost
 
 @Composable

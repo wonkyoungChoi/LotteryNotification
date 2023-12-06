@@ -1,8 +1,8 @@
 package com.wk.lotteryNotification
 
 import androidx.lifecycle.viewModelScope
+import com.wk.data.common.wrappers.NetworkConnectivityManager
 import com.wk.lotteryNotification.base.BaseViewModel
-import com.medium.client.common.wrappers.connectivity.NetworkConnectivityManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

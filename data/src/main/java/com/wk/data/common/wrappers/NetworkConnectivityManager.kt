@@ -1,4 +1,4 @@
-package com.medium.client.common.wrappers.connectivity
+package com.wk.data.common.wrappers
 
 import android.net.ConnectivityManager
 import android.net.Network
