@@ -15,6 +15,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.wk.lotteryNotification.ui.theme.AppTheme
 import com.wk.data.common.wrappers.NetworkStatus
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.wk.lotteryNotification.main.MainViewModel
 
 @Composable
 fun BaseApp(

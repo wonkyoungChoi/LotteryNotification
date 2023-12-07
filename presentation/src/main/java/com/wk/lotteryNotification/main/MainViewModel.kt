@@ -1,4 +1,4 @@
-package com.wk.lotteryNotification
+package com.wk.lotteryNotification.main
 
 import androidx.lifecycle.viewModelScope
 import com.wk.data.common.wrappers.NetworkConnectivityManager

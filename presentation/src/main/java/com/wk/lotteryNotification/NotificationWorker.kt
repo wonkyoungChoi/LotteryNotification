@@ -1,10 +1,15 @@
-package com.wk.data.common.wrappers
+package com.wk.lotteryNotification
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
+import android.app.PendingIntent
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color.RED
 import android.media.AudioAttributes
 import android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION
@@ -13,13 +18,16 @@ import android.media.RingtoneManager.TYPE_NOTIFICATION
 import android.media.RingtoneManager.getDefaultUri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O
-import android.util.Log
+import android.os.Build.VERSION_CODES.S
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_MAX
+import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.ListenableWorker.Result.failure
 import androidx.work.ListenableWorker.Result.success
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.wk.lotteryNotification.main.MainActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -31,25 +39,38 @@ class NotificationWorker @AssistedInject constructor(
 
     override fun doWork(): Result {
         val id = inputData.getLong(NOTIFICATION_ID, 0).toInt()
-        sendNotification(id)
 
-        return success()
+        return if (SDK_INT >= 33) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                failure()
+            } else {
+                showNotification(id)
+                success()
+            }
+        } else {
+            showNotification(id)
+            success()
+        }
     }
 
-    private fun sendNotification(id: Int) {
-        Log.d("CHECKCHECK", "sendNotification")
-
+    private fun showNotification(id: Int) {
         val notificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         val titleNotification = "TEST"
         val subtitleNotification = "TEST"
 
-//        val pendingIntent = if (SDK_INT >= S) {
-//            getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
-//        } else {
-//            getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//        }
+        val intent = Intent(context, MainActivity::class.java)
+
+        val pendingIntent = if (SDK_INT >= S) {
+            getActivity(applicationContext, 0, intent, PendingIntent.FLAG_MUTABLE)
+        } else {
+            getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
 
         val notification = NotificationCompat.Builder(context,
             NOTIFICATION_CHANNEL
@@ -57,8 +78,9 @@ class NotificationWorker @AssistedInject constructor(
             .setSmallIcon(androidx.core.R.drawable.notification_bg)
             .setContentTitle(titleNotification)
             .setContentText(subtitleNotification)
+            .setContentIntent(pendingIntent)
 //            .setDefaults(DEFAULT_ALL).setContentIntent(pendingIntent)
-            .setAutoCancel(false)
+            .setAutoCancel(true)
             .setPriority(PRIORITY_MAX)
 
         if (SDK_INT >= O) {
