@@ -10,6 +10,7 @@ import com.wk.domain.models.ui.LotteryNumData
 sealed class HomeEvent {
     data class RoundButtonTextChanged(val type: String, val round: String) : HomeEvent()
     data class TypeButtonTextChanged(val type: String) : HomeEvent()
+    object StartApp: HomeEvent()
     object SelectRoundButtonClicked : HomeEvent()
     object SelectTypeButtonClicked : HomeEvent()
     object SelectQrScanButtonClicked : HomeEvent()
@@ -27,11 +28,7 @@ data class HomeViewState(
     val typeSelected : MutableState<Boolean> = mutableStateOf(false),
     var dataState: Result<LotteryInfoModel> = Result.Loading(),
     val totalRound: String = "",
-    val lotteryRound: String = "",
-    val lotteryNumData: LotteryNumData = LotteryNumData(),
-    val lotteryBonusNumData: LotteryNumData = LotteryNumData(),
-    var lotteryInfoList: ArrayList<LotteryInfoList> = arrayListOf(),
-    val lotteryDate: String = ""
+    val lotteryInfo: LotteryInfoModel? = null
 )
 
 enum class Type(val key: String) {

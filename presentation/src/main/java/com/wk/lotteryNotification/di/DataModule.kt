@@ -1,14 +1,11 @@
 package com.wk.lotteryNotification.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.wk.data.local.AppDataStore
-import com.wk.data.local.AppDataStoreImpl
+import com.wk.data.data_storage.database.AlarmDao
+import com.wk.data.data_storage.database.AlarmDatabase
 import com.wk.data.remote.api_handler.ApiHandler
 import com.wk.data.remote.api_handler.ApiHandlerImpl
 import com.wk.data.remote.services.lottery.LotteryInfoApi
@@ -26,21 +23,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
-
-    @Singleton
-    @Provides
-    fun provideDataStore(
-        @ApplicationContext context: Context
-    ): DataStore<Preferences> = PreferenceDataStoreFactory.create {
-        context.preferencesDataStoreFile(name = AppDataStore.DATA_STORE_NAME)
-    }
-
-    @Singleton
-    @Provides
-    fun provideAppDataStore(
-        dataStore: DataStore<Preferences>
-    ): AppDataStore = AppDataStoreImpl(dataStore = dataStore)
-
     @Singleton
     @Provides
     fun provideOkHttpClient(
@@ -72,4 +54,19 @@ object DataModule {
     @Singleton
     @Provides
     fun provideApiHandler(): ApiHandler = ApiHandlerImpl()
+
+    @Singleton
+    @Provides
+    fun provideDatabase(@ApplicationContext context: Context): AlarmDatabase {
+        return Room
+            .databaseBuilder(context, AlarmDatabase::class.java, "note_db")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmDao(alarmDatabase: AlarmDatabase): AlarmDao {
+        return alarmDatabase.alarmDao()
+    }
 }

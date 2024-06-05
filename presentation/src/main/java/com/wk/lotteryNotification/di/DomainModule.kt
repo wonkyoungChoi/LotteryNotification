@@ -1,6 +1,8 @@
 package com.wk.lotteryNotification.di
 
+import com.wk.data.datasource.AlarmRepositoryImpl
 import com.wk.data.datasource.LotteryInfoRepositoryImpl
+import com.wk.domain.repository.AlarmRepository
 import com.wk.domain.repository.LotteryInfoRepository
 import dagger.Binds
 import dagger.Module
@@ -14,4 +16,8 @@ interface DomainModule {
     @Singleton
     @Binds
     fun bindLotteryInfoRepository(lotteryInfoRepositoryImpl: LotteryInfoRepositoryImpl): LotteryInfoRepository
+
+    @Singleton
+    @Binds
+    fun bindAlarmRepository(alarmRepositoryImpl: AlarmRepositoryImpl): AlarmRepository
 }

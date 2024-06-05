@@ -10,7 +10,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        minSdk 28
+        minSdk 23
         targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -61,6 +61,14 @@ dependencies {
     //Worker
     implementation 'androidx.work:work-runtime:2.8.0'
     implementation 'androidx.work:work-runtime-ktx:2.8.0'
+
+    //Room
+    implementation("androidx.room:room-runtime:2.5.2")
+    annotationProcessor("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:2.5.2")
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'

@@ -34,7 +34,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
-import com.wk.domain.models.ui.LotteryNumData
 import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.destinations.QrScanScreenDestination
 import com.wk.lotteryNotification.ui.*
@@ -94,7 +93,6 @@ fun HomeScreen(
                     LotteryRoundButton(text = viewState.type, onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectTypeButtonClicked)
                     })
-                    Spacer_10()
                     LotteryRoundButton(text = viewState.lotteryInfo?.lotteryRound + "회", onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectRoundButtonClicked)
                     })
@@ -126,11 +124,6 @@ fun HomeScreen(
         }
     }
 }
-
-//private fun initWorker(context: Context) {
-//    val request = OneTimeWorkRequestBuilder<NotificationWorker>().build()
-//    WorkManager.getInstance(context).enqueue(request)
-//}
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

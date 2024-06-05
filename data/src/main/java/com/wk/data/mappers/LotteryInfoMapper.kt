@@ -114,7 +114,7 @@ private fun getNumber(numberData: String?, bonusData: String?): LotteryNumData {
             numbers[3],
             numbers[4],
             numbers[5],
-            bonusData
+            bonusData.replace("+", "")
         )
     } else LotteryNumData()
 }

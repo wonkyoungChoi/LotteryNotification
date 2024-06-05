@@ -1,7 +1,11 @@
 package com.wk.lotteryNotification.di
 
+import android.app.AlarmManager
+import android.app.NotificationManager
 import android.content.Context
 import android.net.ConnectivityManager
+import com.wk.data.common.wrappers.MyNotificationManager
+import com.wk.data.common.wrappers.MyNotificationManagerImpl
 import com.wk.data.common.wrappers.NetworkConnectivityManager
 import com.wk.data.common.wrappers.NetworkConnectivityManagerImpl
 import dagger.Module
@@ -25,5 +29,27 @@ object AppModule {
         connectivityManager: ConnectivityManager
     ): NetworkConnectivityManager = NetworkConnectivityManagerImpl(
         connectivityManager = connectivityManager
+    )
+
+    @Singleton
+    @Provides
+    fun provideAlarmManager(@ApplicationContext context: Context): AlarmManager {
+        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    @Singleton
+    @Provides
+    fun provideNotificationManager(@ApplicationContext context: Context): NotificationManager =
+        context.getSystemService(NotificationManager::class.java) as NotificationManager
+
+
+    @Singleton
+    @Provides
+    fun provideMyNotificationManager(
+        @ApplicationContext context: Context,
+        notificationManager: NotificationManager
+    ): MyNotificationManager = MyNotificationManagerImpl(
+        context = context,
+        notificationManager = notificationManager
     )
 }
