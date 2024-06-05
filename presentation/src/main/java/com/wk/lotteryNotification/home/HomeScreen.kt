@@ -10,9 +10,9 @@ import android.content.Intent.FLAG_ACTIVITY_NO_HISTORY
 import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -60,16 +60,6 @@ fun HomeScreen(
 
     val context = LocalContext.current
 
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            homeViewModel.onEvent(HomeEvent.SelectQrScanButtonClicked)
-        } else {
-            Toast.makeText(context, "QRCode를 스캔하기 위해서는 카메라 권한이 필요합니다.", Toast.LENGTH_SHORT). show()
-        }
-    }
-
     LaunchedEffect(homeViewModel.sideEffects) {
         homeViewModel.sideEffects.collect { sideEffect ->
             when (sideEffect) {
@@ -86,11 +76,12 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
         ) {
             when (viewState.dataState) {
                 is Result.Success -> {
-
+                    homeViewModel.onEvent(HomeEvent.StartApp)
                     if(viewState.typeSelected.value) InputSelectTypeDialogView(type = viewState.type, viewState = viewState, onClick = {
                         homeViewModel.onEvent(HomeEvent.TypeButtonTextChanged(it))
                     })
@@ -99,11 +90,12 @@ fun HomeScreen(
                         homeViewModel.onEvent(HomeEvent.RoundButtonTextChanged(viewState.type, it))
                     })
 
+                    Spacer_10()
                     LotteryRoundButton(text = viewState.type, onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectTypeButtonClicked)
                     })
                     Spacer_10()
-                    LotteryRoundButton(text = viewState.lotteryRound + "회", onClick = {
+                    LotteryRoundButton(text = viewState.lotteryInfo?.lotteryRound + "회", onClick = {
                         homeViewModel.onEvent(HomeEvent.SelectRoundButtonClicked)
                     })
                     Spacer_10()
@@ -114,11 +106,12 @@ fun HomeScreen(
                     LotteryDateView(viewState = viewState)
                     Spacer_10()
                     LotteryViews(viewState = viewState)
-                    if(viewState.lotteryBonusNumData != LotteryNumData()) {
+                    if(viewState.lotteryInfo?.bonusNumData != null) {
                         Spacer_10()
                         LotteryPensionBonusViews(viewState = viewState)
                     }
                     LotteryInfoTableView(viewState = viewState)
+                    Spacer_10()
                 }
                 is Result.Error -> {
                     MessagesError(
@@ -154,12 +147,6 @@ fun LotteryQrScanView(homeViewModel: HomeViewModel) {
     }
 
     LotteryQrScanButton(onClick = {
-//        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-//            == PackageManager.PERMISSION_GRANTED){
-//            homeViewModel.onEvent(HomeEvent.SelectQrScanButtonClicked)
-//        } else {
-//            cameraPermissionState.launchPermissionRequest()
-//        }
         if (cameraPermissionState.status.isGranted) {
             homeViewModel.onEvent(HomeEvent.SelectQrScanButtonClicked)
         } else {
@@ -194,7 +181,7 @@ fun LotteryRoundView(viewState: HomeViewState) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = viewState.lotteryRound + "회")
+        Text(text = viewState.lotteryInfo?.lotteryRound + "회")
     }
 }
 
@@ -206,7 +193,7 @@ fun LotteryDateView(viewState: HomeViewState) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = viewState.lotteryDate)
+        Text(text = viewState.lotteryInfo?.lotteryDate.toString())
     }
 }
 
@@ -218,16 +205,16 @@ fun LotteryViews(viewState: HomeViewState) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        LotteryCircleText(text = viewState.lotteryNumData.firstNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.secondNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.thirdNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.fourthNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.fifthNum.toString())
-        LotteryCircleText(text = viewState.lotteryNumData.sixthNum.toString())
-        if(viewState.lotteryNumData.firstNum?.contains("조") == false) {
+        LotteryCircleText(text = viewState.lotteryInfo?.lotteryNumData?.firstNum.toString(), )
+        LotteryCircleText(text = viewState.lotteryInfo?.lotteryNumData?.secondNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.lotteryNumData?.thirdNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.lotteryNumData?.fourthNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.lotteryNumData?.fifthNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.lotteryNumData?.sixthNum.toString())
+        if(viewState.lotteryInfo?.lotteryNumData?.firstNum?.contains("조") == false) {
             LotteryCirclePlus()
         }
-        LotteryCircleText(text = viewState.lotteryNumData.bonusNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.lotteryNumData?.bonusNum.toString())
     }
 }
 
@@ -239,13 +226,13 @@ fun LotteryPensionBonusViews(viewState: HomeViewState) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        LotteryCircleText(text = viewState.lotteryBonusNumData.firstNum.toString())
-        LotteryCircleText(text = viewState.lotteryBonusNumData.secondNum.toString())
-        LotteryCircleText(text = viewState.lotteryBonusNumData.thirdNum.toString())
-        LotteryCircleText(text = viewState.lotteryBonusNumData.fourthNum.toString())
-        LotteryCircleText(text = viewState.lotteryBonusNumData.fifthNum.toString())
-        LotteryCircleText(text = viewState.lotteryBonusNumData.sixthNum.toString())
-        LotteryCircleText(text = viewState.lotteryBonusNumData.bonusNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.bonusNumData?.firstNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.bonusNumData?.secondNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.bonusNumData?.thirdNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.bonusNumData?.fourthNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.bonusNumData?.fifthNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.bonusNumData?.sixthNum.toString())
+        LotteryCircleText(text = viewState.lotteryInfo?.bonusNumData?.bonusNum.toString())
     }
 }
 
@@ -258,15 +245,17 @@ fun LotteryInfoTableView(viewState: HomeViewState) {
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.size_10))
     ) {
-        val list = viewState.lotteryInfoList
+        val list = viewState.lotteryInfo?.lotteryInfoList
 
         LotteryTableTitle(head1 = Constants.RANK, head2 = Constants.TOTAL_MONEY, head3 = Constants.WINNER)
 
-        for(i in list.indices) {
-            LotteryTableRow(
-                rank = list[i].rank,
-                takeMoney = list[i].takeMoney,
-                winner = list[i].winner + Constants.PEOPLE_NUM)
+        if (list != null) {
+            for(i in list.indices) {
+                LotteryTableRow(
+                    rank = list[i].rank,
+                    takeMoney = list[i].takeMoney,
+                    winner = list[i].winner + Constants.PEOPLE_NUM)
+            }
         }
     }
 }
