@@ -11,25 +11,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.text.isDigitsOnly
 import com.wk.lotteryNotification.R
+import com.wk.lotteryNotification.ui.theme.Black
+import com.wk.lotteryNotification.ui.theme.ChathamsBlue
+import com.wk.lotteryNotification.ui.theme.DarkGray
+import com.wk.lotteryNotification.ui.theme.DarkRed
+import com.wk.lotteryNotification.ui.theme.Green
+import com.wk.lotteryNotification.ui.theme.Yellow
 
 @Composable
 fun LotteryCircleText(
-    text: String
+    text: String,
 ) {
     Box(
         modifier = Modifier
             .size(dimensionResource(R.dimen.size_40))
             .clip(CircleShape)
             .background(color = if(text.isDigitsOnly()) {
-                MaterialTheme.colors.primary
+                val num = text.toInt()
+                when  {
+                    num < 10 -> Yellow
+                    num < 20 -> ChathamsBlue
+                    num < 30 -> DarkRed
+                    num < 40 -> DarkGray
+                    else -> Green
+                }
             } else {
                 MaterialTheme.colors.secondary
             }
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text.replace("+", ""))
+        Text(
+            text = text,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
