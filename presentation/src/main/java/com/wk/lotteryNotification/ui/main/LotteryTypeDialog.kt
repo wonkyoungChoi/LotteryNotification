@@ -69,10 +69,20 @@ fun InputSelectTypeDialogView(
                                         .padding(
                                             start = dimensionResource(id = R.dimen.size_10),
                                             end = dimensionResource(id = R.dimen.size_10),
-                                            top = dimensionResource (id = R.dimen.size_10),
+                                            top = dimensionResource(id = R.dimen.size_10),
                                             bottom = dimensionResource(id = R.dimen.size_10)
                                         ),
-                                    text = (item),
+                                    text = (when (item) {
+                                        Type.MAIN.key -> {
+                                            stringResource(id = R.string.lottery)
+                                        }
+                                        Type.PENSION.key -> {
+                                            stringResource(id = R.string.lottery_pension)
+                                        }
+                                        else -> {
+                                            item
+                                        }
+                                    }),
                                     color = colorResource(id = R.color.black),
                                 )
                             }
