@@ -19,6 +19,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,11 +38,14 @@ import com.wk.domain.core.Result
 import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.destinations.QrScanScreenDestination
 import com.wk.lotteryNotification.ui.*
+import com.wk.lotteryNotification.ui.main.AdmobBanner
 import com.wk.lotteryNotification.ui.main.InputSelectRoundDialogView
 import com.wk.lotteryNotification.ui.main.InputSelectTypeDialogView
+import com.wk.lotteryNotification.ui.main.LotteryCirclePlus
 import com.wk.lotteryNotification.ui.main.LotteryCircleText
 import com.wk.lotteryNotification.ui.main.LotteryQrScanButton
 import com.wk.lotteryNotification.ui.main.LotteryRoundButton
+import com.wk.lotteryNotification.ui.main.LotteryTableTitle
 import com.wk.lotteryNotification.util.Constants
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -97,11 +101,19 @@ fun HomeScreen(
                         homeViewModel.onEvent(HomeEvent.SelectRoundButtonClicked)
                     })
                     Spacer_10()
-                    LotteryQrScanView(homeViewModel = homeViewModel)
+                    AdmobBanner(modifier = Modifier.fillMaxWidth())
                     Spacer_10()
-                    LotteryRoundView(viewState = viewState)
-                    Spacer_10()
-                    LotteryDateView(viewState = viewState)
+
+                    Row (
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.size_72)))
+                        LotteryDateView(viewState = viewState)
+                        LotteryQrScanView(homeViewModel = homeViewModel)
+                    }
+
                     Spacer_10()
                     LotteryViews(viewState = viewState)
                     if(viewState.lotteryInfo?.bonusNumData != null) {
@@ -166,28 +178,21 @@ fun Context.openAppSettings() {
     startActivity(intent)
 }
 
-@Composable
-fun LotteryRoundView(viewState: HomeViewState) {
-    Row(
-        modifier = Modifier
-            .padding(dimensionResource(id = R.dimen.size_10))
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(text = viewState.lotteryInfo?.lotteryRound + "회")
-    }
-}
+//@Composable
+//fun LotteryRoundView(viewState: HomeViewState) {
+//    Row(
+//        modifier = Modifier
+//            .padding(dimensionResource(id = R.dimen.size_10))
+//            .fillMaxWidth(),
+//        horizontalArrangement = Arrangement.Center
+//    ) {
+//        Text(text = viewState.lotteryInfo?.lotteryRound + "회")
+//    }
+//}
 
 @Composable
 fun LotteryDateView(viewState: HomeViewState) {
-    Row(
-        modifier = Modifier
-            .padding(dimensionResource(id = R.dimen.size_10))
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(text = viewState.lotteryInfo?.lotteryDate.toString())
-    }
+    Text(text = viewState.lotteryInfo?.lotteryDate.toString())
 }
 
 @Composable

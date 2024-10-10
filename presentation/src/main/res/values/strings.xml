@@ -4,6 +4,6 @@
     <string name="connection_not_available">Internet connection not available</string>
     <string name="lottery_round">로또 회차</string>
     <string name="lottery_type">로또 종류</string>
-    <string name="lottery">로또 6/45</string>
+    <string name="lottery">일반 로또(로또 6/45)</string>
     <string name="lottery_pension">연금복권 720+</string>
 </resources>

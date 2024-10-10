@@ -1,4 +1,4 @@
-package com.wk.lotteryNotification.ui
+package com.wk.lotteryNotification.ui.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
