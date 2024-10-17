@@ -217,9 +217,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun setNotificationAlarm(id: Long, alarm: AlarmModel) {
-        notificationAlarmService.clearAlarm(id)
-        if (!alarm.isCompleted) {
-            notificationAlarmService.createAlarm(id, alarm.reminderTimestamp)
-        }
+//        notificationAlarmService.clearAlarm(id)
+//        if (!alarm.isCompleted) {
+//            notificationAlarmService.createAlarm(id, alarm.reminderTimestamp)
+//        }
     }
 }

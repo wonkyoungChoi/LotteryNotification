@@ -7,6 +7,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.wk.lotteryNotification.BuildConfig
 
 @Composable
 fun AdmobBanner(modifier: Modifier = Modifier) {
@@ -20,7 +21,11 @@ fun AdmobBanner(modifier: Modifier = Modifier) {
                 // on below line specifying ad unit id
                 // currently added a test ad unit id.
                 setAdSize(AdSize.BANNER)
-                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                adUnitId = if (BuildConfig.DEBUG) {
+                    "ca-app-pub-3940256099942544/6300978111"
+                } else {
+                    "ca-app-pub-4384467466978197/9004074004"
+                }
                 // calling load ad to load our ad.
                 loadAd(AdRequest.Builder().build())
             }
