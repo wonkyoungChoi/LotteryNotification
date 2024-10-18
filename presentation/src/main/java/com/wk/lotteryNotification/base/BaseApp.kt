@@ -1,7 +1,11 @@
-package com.wk.lotteryNotification
+package com.wk.lotteryNotification.base
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +19,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.wk.lotteryNotification.ui.theme.AppTheme
 import com.wk.data.common.wrappers.NetworkStatus
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.wk.lotteryNotification.NavGraphs
 import com.wk.lotteryNotification.main.MainViewModel
+import com.wk.presentation.R
 
 @Composable
 fun BaseApp(

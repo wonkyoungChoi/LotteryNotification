@@ -1,4 +1,4 @@
-package com.wk.lotteryNotification.ui
+package com.wk.lotteryNotification.ui.main
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
-import com.wk.lotteryNotification.R
+import com.wk.presentation.R
 
 @Composable
 fun LotteryTableRow(rank: String, takeMoney: String, winner: String) {

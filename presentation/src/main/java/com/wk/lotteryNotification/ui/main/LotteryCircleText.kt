@@ -1,8 +1,8 @@
 package com.wk.lotteryNotification.ui.main
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -13,13 +13,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.text.isDigitsOnly
-import com.wk.lotteryNotification.R
-import com.wk.lotteryNotification.ui.theme.Black
 import com.wk.lotteryNotification.ui.theme.ChathamsBlue
 import com.wk.lotteryNotification.ui.theme.DarkGray
 import com.wk.lotteryNotification.ui.theme.DarkRed
 import com.wk.lotteryNotification.ui.theme.Green
 import com.wk.lotteryNotification.ui.theme.Yellow
+import com.wk.presentation.R
 
 @Composable
 fun LotteryCircleText(

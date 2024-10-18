@@ -7,7 +7,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import com.wk.lotteryNotification.BuildConfig
+import com.wk.presentation.BuildConfig
 
 @Composable
 fun AdmobBanner(modifier: Modifier = Modifier) {

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
-import com.wk.lotteryNotification.R
+import com.wk.presentation.R
 
 @Composable
 fun LotteryTableTitle(head1: String, head2: String, head3: String) {

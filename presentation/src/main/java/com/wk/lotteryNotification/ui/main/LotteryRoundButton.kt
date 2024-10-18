@@ -24,9 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.home.Type
 import com.wk.lotteryNotification.ui.theme.RockBlue
+import com.wk.presentation.R
 
 @Composable
 fun LotteryRoundButton(

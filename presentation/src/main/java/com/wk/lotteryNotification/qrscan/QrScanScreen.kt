@@ -1,12 +1,10 @@
 package com.wk.lotteryNotification.qrscan
 
 import android.app.Activity
-import android.content.Context
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,12 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.web.WebView
@@ -29,14 +24,9 @@ import com.journeyapps.barcodescanner.CompoundBarcodeView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
-import com.wk.lotteryNotification.R
-import com.wk.lotteryNotification.home.HomeEvent
-import com.wk.lotteryNotification.home.HomeViewState
 import com.wk.lotteryNotification.home.MessagesError
-import com.wk.lotteryNotification.ui.*
-import com.wk.lotteryNotification.ui.main.InputSelectRoundDialogView
+import com.wk.lotteryNotification.ui.LoadingProgress
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Destination
 @Composable
 fun QrScanScreen(

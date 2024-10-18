@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.ripple
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -22,9 +23,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
-import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.home.HomeViewState
 import com.wk.lotteryNotification.home.Type
+import com.wk.presentation.R
 
 @Composable
 fun InputSelectTypeDialogView(
@@ -61,7 +62,7 @@ fun InputSelectTypeDialogView(
                                         .clickable(
                                             enabled = true,
                                             interactionSource = remember { MutableInteractionSource() },
-                                            indication = rememberRipple(bounded = true),
+                                            indication = ripple(bounded = true),
                                             onClick = {
                                                 onClick(items[position])
                                             }

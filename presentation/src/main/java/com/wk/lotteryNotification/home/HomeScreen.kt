@@ -10,7 +10,14 @@ import android.content.Intent.FLAG_ACTIVITY_NO_HISTORY
 import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -20,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -35,9 +41,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.wk.domain.core.Result
-import com.wk.lotteryNotification.R
 import com.wk.lotteryNotification.destinations.QrScanScreenDestination
-import com.wk.lotteryNotification.ui.*
+import com.wk.lotteryNotification.ui.LoadingProgress
+import com.wk.lotteryNotification.ui.main.LotteryTableRow
 import com.wk.lotteryNotification.ui.main.AdmobBanner
 import com.wk.lotteryNotification.ui.main.InputSelectRoundDialogView
 import com.wk.lotteryNotification.ui.main.InputSelectTypeDialogView
@@ -47,8 +53,8 @@ import com.wk.lotteryNotification.ui.main.LotteryQrScanButton
 import com.wk.lotteryNotification.ui.main.LotteryRoundButton
 import com.wk.lotteryNotification.ui.main.LotteryTableTitle
 import com.wk.lotteryNotification.util.Constants
+import com.wk.presentation.R
 
-@OptIn(ExperimentalComposeUiApi::class)
 @RootNavGraph(start = true)
 @Destination
 @Composable
